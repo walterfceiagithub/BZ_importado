@@ -15,8 +15,7 @@ namespace CLI
     /// </summary>
     public void Run()
     {
-      Servicios.ServiciosImportacion imp = 
-        new Servicios.ServiciosImportacion();
+      Servicios.ServiciosImportacion imp = new Servicios.ServiciosImportacion();
 
       imp.ImportarCSV(Archivo);
       Console.ReadLine();
