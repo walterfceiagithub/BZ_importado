@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-//using Servicios;
+using Servicios;
 
 namespace CLI
 {
@@ -15,10 +15,10 @@ namespace CLI
     /// </summary>
     public void Run()
     {
-      Servicios.ServiciosImportacion imp = 
-        new Servicios.ServiciosImportacion();
+      ServiciosImportacion imp = new ServiciosImportacion();
 
       imp.ImportarCSV(Archivo);
+
       Console.ReadLine();
     }
 

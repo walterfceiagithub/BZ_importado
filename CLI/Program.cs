@@ -13,7 +13,17 @@ namespace CLI
       app = new Aplicacion();
 
       app.Archivo = "d:\\libros.csv";
-      app.Run();
+      try
+      {
+        app.Run();
+        Console.WriteLine("Finalizado OK!");
+      }
+      catch
+      {
+        Console.WriteLine("Finalizado MAL!!!");
+        //  app.Archivo = "nombre_archivo_que_seguro_existe";
+        //  app.Run();
+      }
     }
   }
 }
