@@ -18,8 +18,9 @@ namespace CLI
         app.Run();
         Console.WriteLine("Finalizado OK!");
       }
-      catch
+      catch (Exception ex)
       {
+        Console.WriteLine(ex);
         Console.WriteLine("Finalizado MAL!!!");
         //  app.Archivo = "nombre_archivo_que_seguro_existe";
         //  app.Run();

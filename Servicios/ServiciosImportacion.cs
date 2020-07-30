@@ -4,11 +4,40 @@ using System.Globalization;
 using System.Text;
 
 using System.IO;
+using System.Reflection;
 
 namespace Servicios
 {
+  public enum TipoPublicacion
+  {
+    Libro,
+    Revista,
+    Indefinido
+  }
+
   public class ServiciosImportacion
   {
+    /*
+      00 - Titulo                        Dynamic Programming 
+      01 - Subtitulo;                    A Computational Tool
+      02 - Autores;                      Art Lew|Holger Mauch 
+      03 - Editorial;                    Springer Science & Business Media
+      04 - Fecha_Publicacion;            2006-10-09
+      05 - ISBN_13;                      9783540370130
+      06 - ISBN_10;                      3540370137
+      07 - Paginas;                      379
+      08 - Categorias;                   Computers
+      09 - Tipo;                         bOOK
+      10 - Lenguaje;                     en
+      11 - Imagen;                       http://books.google.com/books/content?id=H_m59Mp1kkEC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
+      12 - Rating;
+      13 - Opiniones;
+      14 - Precio_Lista;                 6664.53
+      15 - Moneda_Lista;                 ARS
+      16 - Precio_Venta;                 4665.17
+      17 - Moneda_Venta                  ARS
+
+     */
     public void ImportarCSV(string archivo)
     {
       FileInfo fi = new FileInfo(archivo);
@@ -33,7 +62,46 @@ namespace Servicios
         {
           string linea = rdr.ReadLine();
 
-          Console.WriteLine(linea);
+          string[] campos = linea?.Split(';');
+          
+          //  Console.WriteLine(campos?[4]);
+
+          if (campos != null && campos.Length == 18)
+          {
+            int? paginasReales;
+            TipoPublicacion? tp;
+
+            if (Int32.TryParse(campos[7], out int paginas))
+            {
+              if (paginas == 0)
+                paginasReales = null;
+              else
+                paginasReales = paginas;
+
+              Console.WriteLine($"El libro tiene {(paginas == 0 ? "paginas no informadas":$"{paginas} paginas")}");
+            }
+
+            switch (campos[9].ToUpper())
+            {
+              case "BOOK":
+                tp = TipoPublicacion.Libro;
+                break;
+
+              case "MAGAZINE":
+                tp = TipoPublicacion.Revista;
+                break;
+
+              default:
+                //  tp = null;
+                tp = TipoPublicacion.Indefinido;
+                break;
+            }
+          }
+          else
+          {
+            Console.WriteLine($"ERROR EN LA LINEA ==> {linea}");
+          }
+          //  Console.WriteLine(linea);
         }
       }
       else
