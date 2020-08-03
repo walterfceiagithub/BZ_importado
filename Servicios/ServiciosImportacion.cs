@@ -42,7 +42,8 @@ namespace Servicios
       17 - Moneda_Venta                  ARS
 
      */
-    public void ImportarCSV(string archivo)
+    //public Publicacion[] ImportarCSV(string archivo)
+    public IEnumerable<Publicacion> ImportarCSV(string archivo)
     {
       FileInfo fi = new FileInfo(archivo);
 
@@ -65,6 +66,9 @@ namespace Servicios
         //  inferencia de tipos...
         //
         var rdr = fi.OpenText();
+
+        //  Publicacion[] publicaciones = new Publicacion[200];
+        List<Publicacion> publicaciones = new List<Publicacion>();
 
         while (!rdr.EndOfStream)
         {
@@ -127,6 +131,8 @@ namespace Servicios
                   break;
               }
             */
+
+            publicaciones.Add(pub);
           }
           else
           {
@@ -134,6 +140,9 @@ namespace Servicios
           }
           //  Console.WriteLine(linea);
         }
+
+        return publicaciones;
+        //  return new Publicacion[10];
       }
       else
       {
