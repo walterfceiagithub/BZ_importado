@@ -5,18 +5,22 @@ using System.Text;
 
 using System.IO;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
+
+using Entidades;
 
 namespace Servicios
 {
-  public enum TipoPublicacion
-  {
-    Libro,
-    Revista,
-    Indefinido
-  }
 
   public class ServiciosImportacion
   {
+    private IConfiguration _config;
+
+    public ServiciosImportacion(IConfiguration config)
+    {
+      _config = config;
+    }
+
     /*
       00 - Titulo                        Dynamic Programming 
       01 - Subtitulo;                    A Computational Tool
@@ -27,7 +31,7 @@ namespace Servicios
       06 - ISBN_10;                      3540370137
       07 - Paginas;                      379
       08 - Categorias;                   Computers
-      09 - Tipo;                         bOOK
+      09 - Tipo;                         BOOK
       10 - Lenguaje;                     en
       11 - Imagen;                       http://books.google.com/books/content?id=H_m59Mp1kkEC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
       12 - Rating;
@@ -46,6 +50,10 @@ namespace Servicios
 
       bool existe = fi.Exists;
 
+      //  var saltarLineas = _config["saltarLineas"];
+
+      var saltarLineas = _config.GetValue<int>("saltarLineas");
+
       if (existe)
       {
         //  string interpolation
@@ -60,6 +68,16 @@ namespace Servicios
 
         while (!rdr.EndOfStream)
         {
+          if (saltarLineas > 0)
+          {
+            rdr.ReadLine();
+            //  saltarLineas -= 5;  //  saltarLineas = saltarLineas - 5
+            saltarLineas--;     //  saltarLineas = saltarLineas - 1
+
+            continue;
+          }
+          Publicacion pub = new Publicacion();
+
           string linea = rdr.ReadLine();
 
           string[] campos = linea?.Split(';');
@@ -69,7 +87,10 @@ namespace Servicios
           if (campos != null && campos.Length == 18)
           {
             int? paginasReales;
-            TipoPublicacion? tp;
+            //  TipoPublicacion tp;
+
+            pub.ISBN13 = campos[5];
+            pub.Titulo = campos[0];
 
             if (Int32.TryParse(campos[7], out int paginas))
             {
@@ -78,24 +99,34 @@ namespace Servicios
               else
                 paginasReales = paginas;
 
-              Console.WriteLine($"El libro tiene {(paginas == 0 ? "paginas no informadas":$"{paginas} paginas")}");
+              pub.Paginas = paginasReales;
+              //  Console.WriteLine($"El libro tiene {(paginas == 0 ? "paginas no informadas":$"{paginas} paginas")}");
             }
 
-            switch (campos[9].ToUpper())
+            pub.Tipo = campos[9].ToUpper() switch
             {
-              case "BOOK":
-                tp = TipoPublicacion.Libro;
-                break;
+              "BOOK" => TipoPublicacion.Libro,
+              "MAGAZINE" => TipoPublicacion.Revista,
+              _ => TipoPublicacion.Indefinido
+            };
 
-              case "MAGAZINE":
-                tp = TipoPublicacion.Revista;
-                break;
+            /*
+              switch (campos[9].ToUpper())
+              {
+                case "BOOK":
+                  pub.Tipo = TipoPublicacion.Libro;
+                  break;
 
-              default:
-                //  tp = null;
-                tp = TipoPublicacion.Indefinido;
-                break;
-            }
+                case "MAGAZINE":
+                  pub.Tipo = TipoPublicacion.Revista;
+                  break;
+
+                default:
+                  //  tp = null;
+                  pub.Tipo = TipoPublicacion.Indefinido;
+                  break;
+              }
+            */
           }
           else
           {

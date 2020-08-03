@@ -1,0 +1,10 @@
+{
+  "nombre": "Roberto",
+  "apellido": "Passareli",
+  "asisteCurso": true,
+  "edad": 67,
+
+  "listaUsuarios": [ 123, 456, 789, 111 ],
+
+  "saltarLineas": 1 
+}

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace CLI
 {
@@ -6,12 +8,20 @@ namespace CLI
   {
     static void Main(string[] args)
     {
+      //  JSON -- javascript object notation
+      //
+      var cfg = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("config.json")
+        .AddCommandLine(args)
+        .Build();
+
       //  DECLARACION
-      Aplicacion app ;
+      Aplicacion app = new Aplicacion(cfg);
 
       //  ASIGNACION
-      app = new Aplicacion();
-
+      //
+      
       app.Archivo = "d:\\libros.csv";
       try
       {
