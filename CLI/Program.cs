@@ -21,13 +21,8 @@ namespace CLI
 
       //  ASIGNACION
       //
-      if (args.Length != 1)
-      {
-        Console.WriteLine("");
-        Environment.Exit(-1);
-      }
-
-      app.Archivo = $"{args[0]}";
+      
+      app.Archivo = "d:\\libros.csv";
       try
       {
         app.Run();
